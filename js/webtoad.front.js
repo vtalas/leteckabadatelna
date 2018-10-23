@@ -75,10 +75,9 @@ function initMap() {
         var map = new google.maps.Map(document.getElementById('google-map'), options);
 
         var url = $('#google-map').data('url');
-        if (window.location.href.indexOf('localhost') !== -1) {
+        if (window.location.href.indexOf('localhost') !== -1 ||  window.location.href.indexOf('vtalas') !== -1) {
             url = './accidents.json';
         }
-
 
         createMap(map, {
             url: url,
