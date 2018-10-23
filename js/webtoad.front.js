@@ -1,10 +1,6 @@
 
 $().ready(function() {
 
-
-    console.log("askdkjsabdkjbsa");
-    return ;
-
     // Init nette.ajax script ==================================================
     var init = $.nette.ext('init');
     init.linkSelector = 'a.ajax, a[data-ajax-confirm]';
