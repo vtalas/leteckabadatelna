@@ -3,6 +3,21 @@ var init = $.nette.ext('init');
 init.linkSelector = 'a.ajax, a[data-ajax-confirm]';
 $.nette.init();
 
+var utils = {
+    isDev: (window.location.href.indexOf('localhost') !== -1 || window.location.href.indexOf('vtalas') !== -1),
+    getJsonUrl: function() {
+        return this.isDev ? './accidents.json' : $('#google-map').data('url');
+    },
+    getAccidentUrl: function(link) {
+
+        var base = this.isDev ? 'http://www.leteckabadatelna.cz/' : document.URL;
+        if (link && link[0] === '/') {
+            link = link.substr(1);
+        }
+        return base + link;
+    }
+};
+
 function getGeolocation(done) {
 
     // prague
@@ -49,36 +64,27 @@ function createMap(map, opt) {
 
             var markers = payload.map(function(e) {
 
-                return new google.maps.Marker({
+                var mark = new google.maps.Marker({
                     position: new google.maps.LatLng(e.lon, e.lat),
                     map: map,
                     icon: opt.marker,
                     title: e.title
                 });
+
+                mark.addListener('click', function() {
+                    window.open(utils.getAccidentUrl(e.link), '_blank')
+                });
+
+                return mark;
             });
 
             var markerCluster = new MarkerClusterer(map, markers,
                 { imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m' });
-
-
-            for (var i = 0, n = markers.length; i < n; i++) {
-                var marker = markers[i];
-                marker.addListener('click', function() {
-                    window.location.href = marker.link;
-                });
-            }
         }
     });
 }
 
 function initMap() {
-
-
-
-    // Map icons
-    // Origins, anchor positions and coordinates of the marker
-    // increase in the X direction to the right and in
-    // the Y direction down.
 
     if ($('#google-map').length <= 0) return;
 
@@ -87,11 +93,8 @@ function initMap() {
         var options = { zoom: 10, center: loc, mapTypeId: google.maps.MapTypeId.ROADMAP };
         var map = new google.maps.Map(document.getElementById('google-map'), options);
 
-        var url = $('#google-map').data('url');
-        if (window.location.href.indexOf('localhost') !== -1 || window.location.href.indexOf('vtalas') !== -1) {
-            url = './accidents.json';
-        }
 
+        var url = utils.getJsonUrl()
         createMap(map, {
             url: url,
             marker: {
