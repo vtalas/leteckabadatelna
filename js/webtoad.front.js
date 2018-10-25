@@ -3,30 +3,41 @@ var init = $.nette.ext('init');
 init.linkSelector = 'a.ajax, a[data-ajax-confirm]';
 $.nette.init();
 
-// Google map ==============================================================
-
 function getGeolocation(done) {
 
+    // prague
     var defaultPos = {
         lat: 50.0837831,
         lng: 14.4331742
     };
 
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-            var pos = {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude
-            };
-
-
-            done(pos);
-        }, function() {
-            done(defaultPos)
-        });
-    } else {
-        done(defaultPos)
+    if (!navigator.geolocation) {
+        return done(defaultPos);
     }
+
+    navigator.geolocation.getCurrentPosition(function(position) {
+
+        var pos = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+        };
+
+        const geocoder = new google.maps.Geocoder();
+        geocoder.geocode({ location: pos }, function(data, status) {
+
+            if (status !== 'OK') {
+                return done(defaultPos);
+            }
+
+            var country = data.filter(function(a) {
+                return a.types.indexOf('country') !== -1;
+            })[0];
+            (country && country.formatted_address === 'Czechia') ? done(pos) : done(defaultPos);
+
+        });
+    }, function() {
+        done(defaultPos)
+    });
 }
 
 function createMap(map, opt) {
@@ -62,6 +73,8 @@ function createMap(map, opt) {
 
 function initMap() {
 
+
+
     // Map icons
     // Origins, anchor positions and coordinates of the marker
     // increase in the X direction to the right and in
@@ -75,7 +88,7 @@ function initMap() {
         var map = new google.maps.Map(document.getElementById('google-map'), options);
 
         var url = $('#google-map').data('url');
-        if (window.location.href.indexOf('localhost') !== -1 ||  window.location.href.indexOf('vtalas') !== -1) {
+        if (window.location.href.indexOf('localhost') !== -1 || window.location.href.indexOf('vtalas') !== -1) {
             url = './accidents.json';
         }
 
