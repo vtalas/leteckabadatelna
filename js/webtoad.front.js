@@ -105,7 +105,6 @@ function initMap() {
     });
 }
 
-/*
 // Placeholder tweak ========================================================
 if (!Modernizr.input.placeholder) {
 
@@ -132,4 +131,3 @@ if (!Modernizr.input.placeholder) {
     });
 
 }
-*/
