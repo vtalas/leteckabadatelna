@@ -13,11 +13,21 @@
     <script src="./js/map.cluster.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBia73u9ybYvlKxLh_uEEoI7ChSXKFWN8s&callback=initMap"
             async defer></script>
+
+    <style type="text/css">
+
+        html, body {
+            margin: 0; padding: 0;
+        }
+        #google-map {
+            width: 100vw;
+            height: 100vh;
+        }
+    </style>
 </head>
 <body>
-<h2 class="inner">Místa dopadů</h2>
 <div class="map">
-    <div style="width: 954px; height: 582px; border: 3px solid #8e8e8e;" id="google-map"
+    <div id="google-map"
          data-marker="http://www.leteckabadatelna.cz/img/gmap-marker.png"
          data-url="http://www.leteckabadatelna.cz/havarie-a-sestrely/?do=loadAccidents"></div>
 

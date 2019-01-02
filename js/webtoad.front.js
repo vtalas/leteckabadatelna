@@ -93,15 +93,24 @@ function initMap() {
         var options = { zoom: 10, center: loc, mapTypeId: google.maps.MapTypeId.ROADMAP };
         var map = new google.maps.Map(document.getElementById('google-map'), options);
 
-
-        var url = utils.getJsonUrl()
+        var url = utils.getJsonUrl();
         createMap(map, {
             url: url,
             marker: {
                 url: $('#google-map').data('marker'),
                 anchor: new google.maps.Point(0, 32)
             }
-        })
+        });
+
+        var marker = new google.maps.Marker({
+            position: loc,
+            map: map,
+            icon: {
+                path: google.maps.SymbolPath.CIRCLE,
+                scale: 5
+            }
+        });
+
     });
 }
 
